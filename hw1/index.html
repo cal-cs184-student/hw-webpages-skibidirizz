@@ -17,30 +17,37 @@
 			}
 
 			img {
-				display: inline-block;
+				display: block;
+				margin: auto;
 			}
 
 			body {
 				font-family: 'Inter', sans-serif;
 			}
+			.math {
+				font-family: "Times New Roman", Times, serif;
+				font-style: italic;
+				display: block;
+				margin: 10px 0;
+        	}
 		</style>
 	</head>
 	<body>
 		<div class="container">
 		<h1>CS184/284A Spring 2025 Homework 1 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<div style="text-align: center;">Names: Rachel Hu, Philip Ye</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw-webpages-skibidirizz/hw1/index.html">Homework 1 Skibidi-Rizz Write Up Web Page</a>
 		
 		<br>
 
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw1-skibidi-rizz">Homework 1 Skibidi-Rizz GitHub Repository</a>
 
 		<figure>
 			<img src="lion.jpg" alt="Lion" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
+			<figcaption>rawr</figcaption>
 		</figure>
 
 		<!--
@@ -51,10 +58,24 @@
 		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
 
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>We iterated through all the pixels in the rectangle that minimally covers the given triangle, and checked if the pixel was inside or on the edge of the given triangle.</p>
+    
+		<p>To get this rectangle, we used the minimum and maximum x and y values inputted as the corners of the triangle. Specifically, we floored and ceiled these values to get the complete triangle, since the input corners can be messy decimal numbers. Then, we began iterating through to check if each pixel was in the triangle and color it in with the given Color <code>c</code> if so.</p>
+		
+		<p>For each pixel, we used the point-in-triangle method to check if the given point was in the given triangle. We checked if the point was “inside or on the edge” for each of the three lines that comprise the triangle, using the line from <code>P0→P1</code>, <code>P1→P2</code>, and <code>P2→P0</code>, where the corners of the triangle are <code>P0</code>, <code>P1</code>, <code>P2</code>. If the given point (x, y) satisfied all three of the following formulas:</p>
+		
+		<p class="math">
+			\[-(x - x_0)(y_1 - y_0) + (y - y_0)(x_1 - x_0) \geq 0\]
+			\[-(x - x_1)(y_2 - y_1) + (y - y_1)(x_2 - x_1) \geq 0\]
+			\[-(x - x_2)(y_0 - y_2) + (y - y_2)(x_0 - x_2) \geq 0\]
+		</p>
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
-		<div style="display: flex; flex-direction: column; align-items: center;">
+		<p>it was considered “inside or on the edge” of the triangle, in which case we colored the pixel in by calling <code>rasterize_point()</code> on it.</p>
+    
+		<p>When we say we checked if a given point (x, y) was “inside or on the edge”, instead of using the corner of the pixel at (x, y), we used the middle of the pixel <code>(x+0.5, y+0.5)</code>, where x and y are whole numbers. So in the above equation, the x and y are actually <code>x+0.5</code> and <code>y+0.5</code>, respectively. But for simplicity's sake, we just say x and y.</p>
+		<p>Our algorithm is indeed the one that checks each sample within the bounding box of a triangle. We calculate the bounding box of the triangle by finding the largest and smallest values of x and y respectively, and checking these samples. By definition this cannot be worse than itself.</p>
+		<img src="task1.png" width="500px"/>
+		<!-- <div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
@@ -77,17 +98,55 @@
 				</td>
 			  </tr>
 			</table>
-		</div>
+		</div> -->
 		
 		<h2>Task 2: Antialiasing by Supersampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>Our supersampling algorithm stayed pretty loyal to the slides presented in lecture. Namely, we broke down each pixel into a <code>sqrt(sample_rate) × sqrt(sample_rate)</code> grid and used some pretty ugly (or pretty, depending on how you look at it) math to run our <code>point_in_triangle(x, y)</code> test on these “subpoints” inside each pixel.</p>
+    
+		<p>To initialize our <code>sample_buffer</code> correctly, we multiply it by a factor of <code>sample_rate</code> in order to store all subsamples of a pixel. To index properly for a given pixel now, instead of using <code>(y * width + x)</code>, we now use:</p>
+		
+		<p class="math">\[(y * width + x) * sample\_rate\]</p>
+		
+		<p>The next <code>sample_rate</code> number of elements in the <code>sample_buffer</code> array belong to this pixel.</p>
+		
+		<p>The bulk of the antialiasing logic lies in two functions: supersampling in <code>rasterize_triangle()</code>, and downsampling in <code>resolve_to_framebuffer()</code>. In <code>rasterize_triangle()</code>, we iterate through the pixels, then the subsamples of each pixel, as shown here:</p>
+		<img src="task2.1.png" width="600px"/>
+		<p>We iterate through the pixels via <code>i</code> and <code>j</code>, and the subsamples of the <code>(i, j)</code> pixels with <code>di</code> and <code>dj</code>. The result of these two values and some math is the <code>(x, y)</code> point, which we use the point-in-triangle test on. The calculation for the index into <code>sample_buffer</code> of this subsample is also shown above. We can also see that we avoid calling <code>fill_pixel</code>, which only supports objects that we don’t want to supersample, and fill the <code>sample_buffer</code> directly. This code successfully supersamples the given triangle and populates <code>sample_buffer</code>.</p>
+    
+	    <p>Then, in <code>resolve_to_framebuffer</code>, we take the populated <code>sample_buffer</code> and downsample it. Here, we take all the subsamples associated with a given pixel and average their RGB values, in order to get the final RGB value of that pixel:</p>
+		<img src="task2.2.png" width="600px"/>
 
+		<p>Here, the outer two for loops iterate through all pixels. The rest inside is the logic for downsampling a single pixel. The <code>rgb_pixel</code> vector is used to collect the sums of all the RGB values, which we later use to calculate the average. The second innermost for loop successfully averages the RGB values for a single pixel and puts it into the framebuffer.</p>
+    
+		<p>For objects that we do not want to antialias, we use <code>fill_pixel()</code>. To account for the new supersample structure in <code>fill_pixel()</code>, we iterate through and fill all the elements in <code>sample_buffer</code> associated with the input pixel. We just take <code>sample_rate</code> indexes at the given <code>(x,y)</code> and set them to our color, that way when we render a single pixel, it’ll still have the correct color. This keeps lines and points rasterized via <code>rasterize_line()</code> and <code>rasterize_point()</code> the same.</p>
+		<img src="task2.3.png" width="600px"/>
+
+		<p>Supersampling as a method of antialiasing is really helpful because it helps us smooth out rough edges and jaggies of pixels that a certain shape is in but is not an extremely large part of. It makes our rendered image more accurate to the original, rather than fixing edges of an object to the edges of a pixel. Intuitively, it makes sense to shade in a given pixel based on what percent of the pixel a given triangle is actually in. However, the math there is super complicated and computationally intense. Supersampling, on the other hand, is easier for a computer to do and approximates this ideal method well.</p>
+		
+		<p>As for modifications to the rasterization pipeline, since we are now supersampling, and the colors in our <code>sample_buffer</code> are no longer the final color of a given pixel, we no longer rasterize a point directly in <code>rasterize_triangle()</code> by calling <code>rasterize_point()</code>, since the scope of this function is a pixel, not a subsample. Instead, we directly set the corresponding index in <code>sample_buffer</code>. Then, after all supersampling is done, we downsize and set the proper color of our pixels in <code>resolve_to_framebuffer()</code>, after which point we actually display our pixels.</p>
+		<p>Here are some images resulting in super sampling at different rates (1, 4, 16 respectively):</p>
+		<img src="task2.4.png" width="400px"/>
+		<img src="task2.5.png" width="400px"/>
+		<img src="task2.6.png" width="400px"/>
+		<p>As the supersample rate goes up, the triangle corner looks more and more like an actual triangle corner. In the first picture, as long as the triangle was touching the center of the pixel, no matter what percent of the pixel the triangle covered, the pixel would be fully red. As the supersample rate goes up, the opacity of the pixel reflects more and more the percent of the triangle inside the pixel. A higher supersample also allows more shades of the given color, making the highest supersample rate of 16 the most accurate and reflective of the triangle of them all.</p>
 		<h2>Task 3: Transforms</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<img src="task3.png" width="600px"/>
+
+		<p>I wanted to make cubeman look like he was dancing, but I also gave him some nice modern-day baggy jeans so he didn’t like out of style. Robot man obviously needs eyes so he can see where he’s going, so I added some eyes under the head section, which also got transformed by the head rotation. Lastly, I made robot man wave hello to his fellow robot homie he saw at the clerb.</p>
 
 		<h2>Task 4: Barycentric coordinates</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
+		<p>Barycentric coordinates are a way to estimate or approximate unknown values in a given image or frame, using nearby known values. For example, say you have two lines, one green and one red, and you didn’t know the color of the area between them. You could approximate it using Barycentric coordinates, which would give you a gradient from green to red in between, and the middle of the two lines would be brown.</p>
+    
+		<p>This general method of approximating or creating new values that fall between known ones is called interpolation. Barycentric coordinates is one method of interpolation.</p>
+		
+		<div class="example">
+			<p><strong>Example:</strong></p>
+			<p>Let’s say we have that point A is red, point B is green, and point C is blue, but the colors of all the points in the triangle formed by these three points are unknown. Barycentric interpolation would take all the pixels inside the triangle and approximate their color using the colors of A, B, and C, thus producing the following triangle:</p>
+			<img src="task4.png" width="300px"/>
+		</div>
+		<p>Below is the color wheel that we created using just the colors of 3 points, and interpolation with Barycentric coordinates.</p>
+		<img src="task4.2.png" width="600px"/>
+	
 		<h2>Task 5: "Pixel sampling" for texture mapping</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
