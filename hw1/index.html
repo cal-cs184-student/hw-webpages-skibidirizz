@@ -125,9 +125,24 @@
 		
 		<p>As for modifications to the rasterization pipeline, since we are now supersampling, and the colors in our <code>sample_buffer</code> are no longer the final color of a given pixel, we no longer rasterize a point directly in <code>rasterize_triangle()</code> by calling <code>rasterize_point()</code>, since the scope of this function is a pixel, not a subsample. Instead, we directly set the corresponding index in <code>sample_buffer</code>. Then, after all supersampling is done, we downsize and set the proper color of our pixels in <code>resolve_to_framebuffer()</code>, after which point we actually display our pixels.</p>
 		<p>Here are some images resulting in super sampling at different rates (1, 4, 16 respectively):</p>
-		<img src="task2.4.png" width="400px"/>
-		<img src="task2.5.png" width="400px"/>
-		<img src="task2.6.png" width="400px"/>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+					<img src="task2.4.png" width="400px"/>
+					<figcaption>Super Sample Rate = 1</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task2.5.png" width="400px"/>
+					<figcaption>Super Sample Rate = 4</figcaption>
+				</td>
+				<td style="text-align: center;">
+					<img src="task2.6.png" width="400px"/>
+					<figcaption>Super Sample Rate = 16</figcaption>
+				  </td>
+			  </tr>
+			</table>
+		</div>
 		<p>As the supersample rate goes up, the triangle corner looks more and more like an actual triangle corner. In the first picture, as long as the triangle was touching the center of the pixel, no matter what percent of the pixel the triangle covered, the pixel would be fully red. As the supersample rate goes up, the opacity of the pixel reflects more and more the percent of the triangle inside the pixel. A higher supersample also allows more shades of the given color, making the highest supersample rate of 16 the most accurate and reflective of the triangle of them all.</p>
 		<h2>Task 3: Transforms</h2>
 		<img src="task3.png" width="600px"/>
