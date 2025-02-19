@@ -65,9 +65,9 @@
 		<p>For each pixel, we used the point-in-triangle method to check if the given point was in the given triangle. We checked if the point was “inside or on the edge” for each of the three lines that comprise the triangle, using the line from <code>P0→P1</code>, <code>P1→P2</code>, and <code>P2→P0</code>, where the corners of the triangle are <code>P0</code>, <code>P1</code>, <code>P2</code>. If the given point (x, y) satisfied all three of the following formulas:</p>
 		
 		<p class="math">
-			\[-(x - x_0)(y_1 - y_0) + (y - y_0)(x_1 - x_0) \geq 0\]
-			\[-(x - x_1)(y_2 - y_1) + (y - y_1)(x_2 - x_1) \geq 0\]
-			\[-(x - x_2)(y_0 - y_2) + (y - y_2)(x_0 - x_2) \geq 0\]
+			\[(x - x_0)(y_1 - y_0) - (y - y_0)(x_1 - x_0) \geq 0\]
+			\[(x - x_1)(y_2 - y_1) - (y - y_1)(x_2 - x_1) \geq 0\]
+			\[(x - x_2)(y_0 - y_2) - (y - y_2)(x_0 - x_2) \geq 0\]
 		</p>
 
 		<p>it was considered “inside or on the edge” of the triangle, in which case we colored the pixel in by calling <code>rasterize_point()</code> on it.</p>
