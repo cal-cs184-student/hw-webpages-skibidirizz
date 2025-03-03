@@ -82,7 +82,11 @@
 		</div>
 
 		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<li>Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.</li>
+		<br/>
+		The Casteljau algorithm can extend to Bezier surfaces because Bezier surfaces can just be represented as a collection of 3D control points. In order to 
+		evaluate the Bezier surface, we can generate n 3D Bezier curves -- one for each row. Once we have n of these 3D Bezier curves, we can recursively call 
+		evaluateStep() on these until they converge on a single point - we will then use these n points to run our algorithm one final time to get a Bezier surface.
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
