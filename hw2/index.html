@@ -115,7 +115,7 @@
 			</table>
 		</div>
 		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
-		<li>Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.</li>
+		<li><b>Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.</b></li>
 		<br/>
 		The Casteljau algorithm can extend to Bezier surfaces because Bezier surfaces can just be represented as a collection of 3D control points. In order to 
 		evaluate the Bezier surface, we can generate n 3D Bezier curves -- one for each row. Once we have n of these 3D Bezier curves, we can recursively call 
@@ -123,15 +123,46 @@
 		<br/>
 		<br/>
 		<div style="text-align: center;">
-			<img src="teapot_real.png" width="500px"/>
+			<img src="1.2-bezier-surface.png" width="500px"/>
 		</div>
 		
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
 		<h3>Part 3: Area-weighted vertex normals</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<li><b>Briefly explain how you implemented the area-weighted vertex normals.
+		</b></li>
+		<br/>
+		<li>To implement area-weighted vertex normals, we need to calculate 1 vector normal to the face
+		for every face incident to our vertex. For example, if our vertex was incident to
+		6 faces, we'd need to calculate 6 normal vectors, 1 for each face, and then sum them up
+		and return the unit vector of this sum.</li>
+		<li>In order to traverse through all the incident faces,
+		we used the algorithm described in lecture and the primer where you keep iterating through
+		h->next()->twin(), and get the corresponding face from h->face(). We can compute 2 vectors along
+		the face by just using 2 arbitrary face edges as these vectors, and then we compute the cross to get 
+		our normal vector.
+		</li>
+		<br/>
 
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="2.3-non-normalized.png" width="500px"/>
+				  <figcaption>Without vertex normalization</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="2.3-normalized.png" width="500px"/>
+				  <figcaption>With vertex normalization</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+
+
+		
 		<h3>Part 4: Edge flip</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
