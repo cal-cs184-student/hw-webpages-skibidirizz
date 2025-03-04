@@ -164,7 +164,33 @@
 
 		
 		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<li><b>Briefly explain how you implemented the edge flip operation and describe any interesting implementation / debugging tricks you have used.
+		</b></li>
+		<br/>
+		Implementing edge flip was fairly straightforward - we just drew the before and after of
+		our edge flip and referenced our solution with the link provided on how to correctly flip an edge. Once
+		we knew our diagram was correct, we tediously reassigned a bunch of pointers, including ones that didn't change.
+		One minor mistake we made along the way was assignined the outside half-edge pointers to incorrect variables,
+		when we should have just set outside_halfedge->next() = outside_halfedge->next() for consistency!
+		<br/>
+		<br/>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="2.4-pre-flip.png" width="500px"/>
+				  <figcaption>Before flip</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="2.4-post-flip.png" width="500px"/>
+				  <figcaption>After flip</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+
 
 		<h3>Part 5: Edge split</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
