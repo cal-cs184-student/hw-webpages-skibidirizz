@@ -191,9 +191,39 @@
 		</div>
 
 
-
 		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<li><b>Briefly explain how you implemented the edge split operation and describe any interesting implementation / debugging tricks you have used.</b></li>
+		<br/>
+		To be entirely honest this part was pretty much as straightforward as part 4, just a very tedious
+		drawing out of the expected before and after, initializing the new items as part of the mesh,
+		and then very carefully reassigning all of the pointers for every single data structure. We didn't really
+		struggle nearly as much as last time, since this operation is just very detail oriented but not 
+		highly complex. The only thing we had to debug was a circular Halfedge linked list which caused our code to crash,
+		but we quickly identified the mistake.
+		<br/>
+		<br/>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="2.5-pre-split.png" width="500px"/>
+				  <figcaption>Before splits</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="2.5-post-split-only.png" width="500px"/>
+				  <figcaption>After splits</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<br/>
+		<div style="text-align: center;">
+			<img src="2.5-post-split-and-flip.png" width="500px"/>
+			<figcaption>After splits and flips</figcaption>
+		</div>
+
+		
+		
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
