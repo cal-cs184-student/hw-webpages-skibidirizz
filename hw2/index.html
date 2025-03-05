@@ -226,8 +226,44 @@
 		
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+			To implement the loop subdivision, we first computed the new positions of old vertices, since this calculation doesn't depend on the new vertices, and it's much easier to find neighboring old vertices prior to adding the new ones.
+			We also made sure to flag these vertices as old, for the sake of the flipping part of the algorithm later.
+		</p>
+		<p>
+			Then, for each edge, we computed the positions of the new vertices that would split the edge in half in the splitting part of the algorithm. We stored them in the newPosition attribute of the edge, to use for later.
+		</p>
+		<p>
+			Then, we did the actual splitting. Outside of just calling <code>splitEdge</code> on all old edges, there were a few interesting implementation points to consider.
+		</p>
+		<p>
+			First of all, we could not just iterate through the edges beginning to end of the mesh (using <code>for (EdgeIter e = mesh.edgesBegin(); e != mesh.edgesEnd(); e++)</code>), since we would be adding new edges and vertices along the way.
+			We considered using the <code>isNew</code> flag to differentiate old and new edges here to resolve this issue. However, this would require us to set the <code>isNew</code> flag of the two new edges that split the original edge to <code>true</code>.
+			While that may make sense, we had to use this <code>isNew</code> flag to differentiate completely new edges, as opposed to an old edge split into two new edges, later on for the flipping part of the algorithm.
+			As such, once an edge is split, the two new edges, that replace where the old edge was, still have their <code>isNew</code> attribute set to <code>false</code>.
+			And the two new edges that actually split the original triangle have their <code>isNew</code> attribute set to <code>true</code>.
+			Since this approach didn't work, we put all the original edges in a separate list, and iterated through that list to split, instead of directly iterating via the mesh iterator when splitting.
+		</p>
 
+		<p>
+			Another interesting detail there is that the implementation of <code>splitEdge</code> actually mattered, in determining whether our new vertex pointed to a new Halfedge or an old Halfedge. This determined what is set to true and what is set to false in the following code block:
+		</p>
+		<div style="text-align: center;">
+			<img src="6.1-code-edges.png" width="350px"/>
+		</div>
+		<p>
+			After splitting, we implemented the flipping portion. This part was straightforward with the algorithm. However, we originally thought that we would have to do the same thing as in splitting with creating a separate list of all edges to iterate through, since we were changing the composition of the edges.
+			However, we tried direct use of the mesh iterator, which surprisingly gave the same output. We realized that the iterator doesn't use the properties of the edges to iterate through all of them, so changing those properties doesn't effect the iterator; only adding and deleting edges would affect it.
+		</p>
+		<p>Finally, officially setting the new position of all vertices was straightforward, with iterating through all vertices. That concludes the whole algorithm.</p>
+		<p>Debugging was a matter of trying different code and seeing if it worked, such as with and without extracting a list of edges prior to splitting and flipping. Visualizing each change, with half edges and twins and nexts and vertices, on a piece of paper, also helped with working with setting <code>isNew</code> correctly on necessary edges.
+			Thankfully, our part 4 and part 5 implementation of splitting and flipping were already fully correct and required no extra debugging to fix.
+			Of course, putting local functions in a larger algorithm can complicate things. Another debugging trick we used was to manually split via hotkey 'S' a certain triangle, and see if the split from upsampling was the same. This required figuring out the order in which a given triangle's edges were being split, but we used simple if conditions and print statements to figure that out.
+		</p>
+		<p>Here is an example of how our loop subdivisioning works, using cube.dae:</p>
+		<p>After toggling around and examining how meshes </p>
+		
+		
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
