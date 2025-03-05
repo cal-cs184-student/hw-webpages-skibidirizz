@@ -269,21 +269,21 @@
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="6-teapot-1.png" width="500px"/>
+				  <img src="6-teapot-1.png" width="450px"/>
 				  <figcaption>Original Teapot.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="6-teapot-2.png" width="500px"/>
+				  <img src="6-teapot-2.png" width="450px"/>
 				  <figcaption>L1 Subdivision.</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="6-teapot-3.png" width="500px"/>
+				  <img src="6-teapot-3.png" width="450px"/>
 				  <figcaption>L2 Subdivision.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="6-teapot-4.png" width="500px"/>
+				  <img src="6-teapot-4.png" width="450px"/>
 				  <figcaption>L3 Subdivision.</figcaption>
 				</td>
 			  </tr>
@@ -292,38 +292,72 @@
 		<p>If we presplit the edges into smaller parts, we see from the images below that some level of sharpness can be
 			maintained of we presplit an area and create more, smaller triangles there.
 			We presplit one part of the teapot edge, highlighted in red in the first image below, and applied loop subdivision to see these results.
+			The presplit section juts out here and still has a clearer block, defined by its shadow.
 		</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="6.1-chosen-presplit.png" width="500px"/>
+				  <img src="6.1-chosen-presplit.png" width="450px"/>
 				  <figcaption>Highlighted the Pre-split Location in Red.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="6.1-presplit.png" width="500px"/>
+				  <img src="6.1-presplit.png" width="450px"/>
 				  <figcaption>Pre-splits (zoom in to view clearly).</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="6.1-presplit-1.png" width="500px"/>
+				  <img src="6.1-presplit-1.png" width="450px"/>
 				  <figcaption>L1 Subdivision.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="6.1-presplit-2.png" width="500px"/>
+				  <img src="6.1-presplit-2.png" width="450px"/>
 				  <figcaption>L2 Subdivision.</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="6.1-presplit-3.png" width="500px"/>
+				  <img src="6.1-presplit-3.png" width="450px"/>
 				  <figcaption>L3 Subdivision.</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
-		<p>After toggling around and examining how meshes </p>
+		<p>Looking at the cube and its subdivisions, we see how somehow, a symmetric initial cube becomes asymmetric in its subdivisions:</p>
+		
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="6-teapot-1.png" width="450px"/>
+				  <figcaption>Original Teapot.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="6-teapot-2.png" width="450px"/>
+				  <figcaption>L1 Subdivision.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="6-teapot-3.png" width="450px"/>
+				  <figcaption>L2 Subdivision.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="6-teapot-4.png" width="450px"/>
+				  <figcaption>L3 Subdivision.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<p>We tried to apply splits and flips prior to subdivision in order to alleviate this.</p>
+		<p>TODO: insert images showing which splits and flips we did prior to subdivision.</p>
+		
+		<p>This was the result of subdividing after this preprocessing:</p>
+		<p>TODO: insert images of subdividing after preprocessing.</p>
+
+		<p>We can see here how this preprocessing helped alleviate the asymmetries in prior subdivisions.</p>
+		<p>TODO: add explanation as to why the preprocessing made the result of subdividing symmetrical.</p>
 		
 		
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
