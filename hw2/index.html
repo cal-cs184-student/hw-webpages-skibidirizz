@@ -323,22 +323,40 @@
 			  </tr>
 			</table>
 		</div>
-		<p>After toggling around and examining how meshes </p>
-		
+		<br/>
+		<br/>
+		<li><b>Load dae/cube.dae. Perform several iterations of loop subdivision on the cube. Notice that the cube becomes slightly asymmetric after repeated subdivisions. Can you pre-process the cube with edge flips and splits so that the cube subdivides symmetrically? Document these effects and explain why they occur. Also explain how your pre-processing helps alleviate the effects.</b></li>
+
+		<br/>
+		<br/>
+		The reason why we get a skewed cube in the first place is a natural result of running Catmull-Clark on asymmetric triangles.
+		Because each vertice position is the weighted sum of it's neighbors, any asymmetric triangles and thus faces in our object
+		will cause skewing to happen as we run the algorithm, because the centers of adjacent faces, (and their sizes) are used to calculate new edge-points. 
+		We can fix this problem by splitting each edge once, so that each face of our cube is entirely symmetric. This stops
+		any asymmetry from happening, as each vertex will get similarly repositioned by their neighbors.
+		<br/>
+		<br/>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="2.6-skewed.png" width="500px"/>
+				  <figcaption>No split - Asymmetric</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="2.6-non-skewed.png" width="500px"/>
+				  <figcaption>After split - Symmetric</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
 		
 		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		
 		</div>
 	</body>
 </html>
