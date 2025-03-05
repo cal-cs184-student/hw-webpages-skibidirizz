@@ -48,7 +48,11 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		This homework was mainly about implementing the math behind bezier curves, and using abstraction to be able to take 2D algorithms into 3D algorithms similarly. We got to work extensively with
+		a lower level representation of mesh geometry through Halfedges, and learned how to carefully manipulate the geometry/topology of our mesh by changing pointers
+		and vertex positions. This eventually lead us to be able to run our 4-1 loop subdivision algorithm, and we were able to implement mesh upsampling. Some of the most important takeaways were seeing how 
+		different mesh elements interact with one another, being exposed to the underlying algorithms powering everyday graphics (Bezier curves, Phong shading). Overall, it was very valuable to be able to work with a mesh representation, as well as 
+		implement algorithms from class to further our knowledge of them.
 
 		<h2>Section I: Bezier Curves and Surfaces</h2>
 
@@ -325,27 +329,36 @@
 			</table>
 		</div>
 		<p>Looking at the cube and its subdivisions, we see how somehow, a symmetric initial cube becomes asymmetric in its subdivisions:</p>
-		
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="6-teapot-1.png" width="450px"/>
-				  <figcaption>Original Teapot.</figcaption>
+				  <img src="6.2-cube-1.png" width="450px"/>
+				  <figcaption>Original Cube.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="6-teapot-2.png" width="450px"/>
-				  <figcaption>L1 Subdivision.</figcaption>
+					<img src="6.2-cube-2.png" width="450px"/>
+					<figcaption>L1 Subdivision.</figcaption>
 				</td>
 			  </tr>
 			  <tr>
 				<td style="text-align: center;">
-				  <img src="6-teapot-3.png" width="450px"/>
-				  <figcaption>L2 Subdivision.</figcaption>
+					<img src="6.2-cube-3.png" width="450px"/>
+					<figcaption>L2 Subdivision.</figcaption>
 				</td>
 				<td style="text-align: center;">
-				  <img src="6-teapot-4.png" width="450px"/>
+				  <img src="6.2-cube-4.png" width="450px"/>
 				  <figcaption>L3 Subdivision.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+					<img src="6.2-cube-5.png" width="450px"/>
+					<figcaption>L4 Subdivision.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="6.2-cube-6.png" width="450px"/>
+				  <figcaption>L5 Subdivision.</figcaption>
 				</td>
 			  </tr>
 			</table>
@@ -353,26 +366,28 @@
 		<p>We tried to apply splits and flips prior to subdivision in order to alleviate this.</p>
 		<p>TODO: insert images showing which splits and flips we did prior to subdivision.</p>
 		
-		<p>This was the result of subdividing after this preprocessing:</p>
-		<p>TODO: insert images of subdividing after preprocessing.</p>
-
+		<p>This was the result of subdividing after this preprocessing, side by side with the asymmetric prior:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="2.6-skewed.png" width="500px"/>
+				  <figcaption>No split - Asymmetric</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="2.6-non-skewed.png" width="500px"/>
+				  <figcaption>After split - Symmetric</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 		<p>We can see here how this preprocessing helped alleviate the asymmetries in prior subdivisions.</p>
-		<p>TODO: add explanation as to why the preprocessing made the result of subdividing symmetrical.</p>
-		
-		
-		<h2>(Optional) Section III: Potential Extra Credit - Art Competition: Model something Creative</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		<p>The reason why we get a skewed cube in the first place is a natural result of running Catmull-Clark on asymmetric triangles.
+			Because each vertice position is the weighted sum of it's neighbors, any asymmetric triangles and thus faces in our object
+			will cause skewing to happen as we run the algorithm, because the centers of adjacent faces, (and their sizes) are used to calculate new edge-points. 
+			We can fix this problem by splitting each edge once, so that each face of our cube is entirely symmetric. This stops
+			any asymmetry from happening, as each vertex will get similarly repositioned by their neighbors.
+		</p>
 		</div>
 	</body>
 </html>
