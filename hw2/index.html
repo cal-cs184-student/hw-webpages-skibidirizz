@@ -261,6 +261,68 @@
 			Of course, putting local functions in a larger algorithm can complicate things. Another debugging trick we used was to manually split via hotkey 'S' a certain triangle, and see if the split from upsampling was the same. This required figuring out the order in which a given triangle's edges were being split, but we used simple if conditions and print statements to figure that out.
 		</p>
 		<p>Here is an example of how our loop subdivisioning works, using cube.dae:</p>
+		<p>In general, we observed that sharp edges and corners are smoothed out with loop subdivision, and get smoother and smoother as you keep subdividing.
+			For example, take a look at the knob on the top of this teapot, and the edge where the cap connects to the teapot itself.
+			It starts off really sharp around its edges, but these edges get smoother and smoother the more it is subdivided:
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="6-teapot-1.png" width="500px"/>
+				  <figcaption>Original Teapot.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="6-teapot-2.png" width="500px"/>
+				  <figcaption>L1 Subdivision.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="6-teapot-3.png" width="500px"/>
+				  <figcaption>L2 Subdivision.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="6-teapot-4.png" width="500px"/>
+				  <figcaption>L3 Subdivision.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		<p>If we presplit the edges into smaller parts, we see from the images below that some level of sharpness can be
+			maintained of we presplit an area and create more, smaller triangles there.
+			We presplit one part of the teapot edge, highlighted in red in the first image below, and applied loop subdivision to see these results.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="6.1-chosen-presplit.png" width="500px"/>
+				  <figcaption>Highlighted the Pre-split Location in Red.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="6.1-presplit.png" width="500px"/>
+				  <figcaption>Pre-splits (zoom in to view clearly).</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="6.1-presplit-1.png" width="500px"/>
+				  <figcaption>L1 Subdivision.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="6.1-presplit-2.png" width="500px"/>
+				  <figcaption>L2 Subdivision.</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="6.1-presplit-3.png" width="500px"/>
+				  <figcaption>L3 Subdivision.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 		<p>After toggling around and examining how meshes </p>
 		
 		
