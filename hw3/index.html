@@ -28,16 +28,17 @@
 	<body>
 		<div class="container">
 		<h1>CS184/284A Spring 2025 Homework 3 Write-Up</h1>
-		<div style="text-align: center;">Names: </div>
+		<div style="text-align: center;">Names: Rachel Hu, Philip Ye</div>
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/sp25">cs184.eecs.berkeley.edu/sp25</a>
+		Link to webpage:  <a href="https://cal-cs184-student.github.io/hw-webpages-skibidirizz/hw3/index.html">https://cal-cs184-student.github.io/hw-webpages-skibidirizz/hw3/index.html</a>
+		<br>
+		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/sp25-hw3-jabroni-boi">https://github.com/cal-cs184-student/sp25-hw3-jabroni-boi</a>
 		
 		<figure>
 			<img src="cornell.png" alt="Cornell Boxes with Bunnies" style="width:70%"/>
-			<figcaption>You can add images with captions!</figcaption>
+			<figcaption>Cornell Boxes with Bunnies</figcaption>
 		</figure>
 
 		<!--
@@ -48,9 +49,57 @@
 		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
 
 		<h2>Part 1: Ray Generation and Scene Intersection</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h4>Ray Generation Walkthrough</h4>
+		<p>A camera captures the world into a 2D image, or "image space." Ray generation is essentially a way to estimate/recover the original real-world coordinates of a given point in this image space.</p>
+		<p>The first step is to convert image space coordinates, (x, y), into camera space coordinates, (x, y, z). This is essentially done by fixing a Z value in camera space, then shifting and scaling the image (x, y) coordinates into their corresponding camera space coordinates.
+			The z dimension here is intuitively the direction that the camera is looking at, called the viewing direction. We fix Z so as to put all image space coordinates in a plane in 3D.</p>
+		<p>The ray from our camera (the origin in camera space) to this calculated location on the camera plane, is our desired camera space ray.</p>
+		<p>Then, we use the camera-to-world conversion matrix to convert the camera space ray into world space. This can be thought of as a change of basis conversion. The new origin of the ray is therefore the camera's position in world space.</p>
+		<p>Anything beyond a certain threshold set by min_t and max_t are considered out of frame from the camera's viewpoint. We also normalize the world space vector so as to keep consistent calculations across different rays and directions.</p>
+		<p>We can then use this calculation to determine many things. For example, we used this, alongside Monte Carlo Integration, to estimate the radiance in this ray direction.</p>
+		
+		<h4>Primitive Intersection Walkthrough</h4>
+		<p>You have a ray, and a primitive object, such as a triangle or sphere, and you want to check if and where they intersect. You can achieve this simply by setting the equations of these objects equal to each other to see if there exists a point at which they are equal. With rays specifically, this means calculating the t in the ray equation where it intersects the primitive object, and checking if the t-value obtained is valid or not.</p>
+		<p>t being valid essentially means its within our field of view. If the intersection point is beyond our t-bounds, we cannot see the object. Every time we get a new, valid t, we set our maximum t to that t value. This makes sense intuitively, becomes it essentially means "once our ray hits this object, we can't see any object behind it."</p>
+		<p>Checking these intersection points is used to correctly render objects in front of others.</p>
+		
+		<h4>Triangle Intersection Algorithm</h4>
+		<p>
+			To check whether a ray intersection a triangle, we first checked if the ray intersected the plane the triangle was on, by deriving the plane equation from the triangle's coordinates, then setting these equations equal to each other to find the t ("time") at which the ray intersects the plane.
+			If it did intersect, we used a 3D point-in-triangle test to determine if the intersection point between the ray and the plane, lied inside the triangle.
+			For that, we checked whether or not the point was on the correct side of each edge of the triangle. If it were on the correct / same side of all three edges, it means it is inside the triangle.
+		</p>
+		<p>
+			Later on, we used the Moller Trumbore algorithm to get barycentric coordinates for our intersection point within the triangle, which we then used to interpolate the surface normal at the intersection point. This surface normal has many use cases, in this case namely for shading and lighting.
+		</p>
+		<h4>Example Images</h4>
+		<p>Here's a few examples of the result of implementing ray generation and primitive intersection algorithms:</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="CBempty.png" width="300px"/>
+				  <figcaption>CBempty</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="CBspheres.png" width="300px"/>
+				  <figcaption>CBspheres</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="banana.png" width="300px"/>
+				  <figcaption>banana</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="building.png" width="300px"/>
+				  <figcaption>building</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
+		<!-- <p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -74,7 +123,7 @@
 				</td>
 			  </tr>
 			</table>
-		</div>
+		</div> -->
 		
 		<h2>Part 2: Bounding Volume Hierarchy</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
