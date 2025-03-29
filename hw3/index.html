@@ -126,7 +126,17 @@
 		</div> -->
 		
 		<h2>Part 2: Bounding Volume Hierarchy</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			<p>
+				In our BVH construction algorithm, we decided to recursively divide the list of primitives into a binary tree structure (per the spec), where each node contains a bounding box that encloses its child primitives. We'd like to organize the primitives spatially so that ray-primitive intersection tests can be performed efficiently, 
+			by quickly culling (or "pruning") large sections of the scene that do not intersect the ray.
+			</p>
+			<p>
+				We start out our algorithm with some given range of primitives (start to end) and checks whether the number of primitives is less than or equal to a user-specified max_leaf_size. If it happens to be so, we create a leaf node by storing that range of primitives and then return.
+			However, if the number of primitives exceeds max_leaf_size, the algorithm must decide how to split the primitives into two subsets, and this is where our splitting heuristic comes in.
+			</p>
+			<p>
+				
+			</p>
 
 		<h2>Part 3: Direct Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
