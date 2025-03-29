@@ -139,8 +139,78 @@
 			</p>
 
 		<h2>Part 3: Direct Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+			In this part, we implemented 2 different types of direct lighting: direct lighting with uniform hemisphere sampling and direct lighting with importance sampling lights
+		</p>
 
+		<p>
+			At a high level, Direct Lighting with <b>Uniform Hemisphere sampling</b> works by sampling directions uniformly over the hemisphere centered around the surface normal. We calculate the hit point of the ray using its origin and direction, as well 
+			as the number of samples to use, and from here, we follow a couple of steps:
+			<li>
+				Sample a random direction using hemisphereSampler->get_sample()
+			</li>
+			<li>
+				Transform said direction into our world coordinates, then we cast a shadow ray from the hit point in the sampled direction to check if it intersects with any object in the scene. 
+				If it hits an object, we need to check whether that object emits light using bsdf->get_emission()	
+			</li>
+			<li>
+				Evaluate the BSDF at the surface using the outgoing direction (w_out) and the sampled incoming direction
+			</li>
+			<li>
+				From here, we just run the Monte Carlo algorithm and sum it up. We have f(p, wj -> wr), L(p, wj), cos(theta) and p(wj), so we can just plug it into our formula from Lecture 13!
+			</li>
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<img src="mclol.png" width="300px"/>
+		</div>
+		
+
+		<p>
+			<b>Importance sampling</b> aims to improves the efficiency from uniform hemisphere sampling by sampling only directions that point toward actual lights in the scene. We use our knowledge about light sources to bias sampling toward more meaningful directions -> hence the name importance sampling!
+		</p>
+		<p>
+			This time, we'll iterate through all the lights in the scene. If we have a delta light (point light), only sample one direction to the light. 
+			If not, we'll have to sample ns_area_light times to better approximate the range of incoming directions.
+		</p>
+		<p>
+			<li>
+				For each light, we'll call light->sample_light. This gives us radiance of the light from w_i, and it writes out the direction w_i, distance to the light, and the associated sampling pdf
+			</li>
+			<li>
+				Discard "bad" lights (invalid pdfs, or "shadow rays". These can be tested by casting a shadow ray and checking for other intersections with blocking objects.)
+			</li>
+			<li>
+				Now run the Monte Carlo algorithm similar to Uniform Sampling. For area lights, we need to average the L_out produced by all the samples.
+			</li>
+		</p>
+
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="bunny_64_32.png" width="300px"/>
+				  <figcaption>Hemisphere Lighting</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_64_32_imp_sampling.png" width="300px"/>
+				  <figcaption>Importance Sampling</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="dragon_screenshot_3-29_2-45-58.png" width="300px"/>
+				  <figcaption>Hemisphere Lighting</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="dragon_screenshot_3-29_2-48-45.png" width="300px"/>
+				  <figcaption>Importance Sampling</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+		
+		
 		<h2>Part 4: Global Illumination</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
