@@ -209,10 +209,68 @@
 			  </tr>
 			</table>
 		</div>
+		<p>It's a little difficult to see at first, but looking at areas with higher shadows, you can tell that Importance Lighting causes more contrast, giving darker shadows and whiter whites. 
+			By contrast, Uniform Hemisphere Lighting gives more equal, softer shadows across the rabbit. We can tell this is most likely due to the fact that Uniform Hemisphere Lighting does exactly what the name suggests - namely
+			it uses the Monte Carlo algorithm to uniformly and randomly sample directions, hence the more equal distribution of light. By contrast, our Importance Lighting algorithm
+			 takes into consideration point light sources as well as multiple bounce lights, so we have a more "accurate" and contrasting photo.
+		</p>
 		
 		
 		<h2>Part 4: Global Illumination</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>In this part, we implement indirect lighting through recursive path tracing. Since we want to trace inverse paths, we need to figure out where to go to next, and now, our next location can be a light or an object. 
+			This helps us to account for the light that has bounced at least once off other surfaces before reaching an object!
+		</p>
+		<p>To do this, we use set a hard cap at max_ray_depth, and we can set the recursion limit in 2 ways: 1) Using a fix number N bounces and 2) Russian Roulette Termination</p>
+		<p><b>Global Illumination with up to N Bounces of Light</b></p>
+		<p>
+			<li>
+				The first thing to do is set our base cases. If our ray depth is <= 1, then we know we've hit a base case - return L_out.
+			</li>
+			<li>
+				We also need to consider the direct lighting radiance, which happens if isAccumBounces is true or if we've hit the max depth.
+			</li>
+			<li>
+				Now, we sample the BSDF to figure out the next direction to go to. We need to check if the new ray we spawned (the inverse path) escaped
+				the scene without hitting anything, so we test for intersection. If there's is an environment left in the scene, we need to sample it!
+			</li>
+			<li>
+				With our new ray and (possibly new) intersection, we need to recursively call the function with r.depth - 1 in our new ray. Once we have the recursive result, 
+				we simply add it up in our Monte Carlo Estimator as usual.
+			</li>
+		</p>
+
+		<p><b>Russian Roulette</b></p>
+		<p>This is not all that different - in fact all we do is add a line of code which flips a coin with probability p of success. Upon success, we 
+			terminate the ray by returning L_out. If not, we continue, but modify our monte carlo to be sample light to be scaled by 1 / (1-p). 
+			This ensures that a ray which is able to consistently escape termination will not end up contributing as much light.
+		</p>
+
+		<div style="display: flex; justify-content: center; gap: 40px; margin-bottom: 20px;">
+			<div style="text-align: center;">
+			  <img src="bunny-1l-indirect.png" width="300px"/>
+			  <figcaption>Bunny</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="sphere-1l-global.png" width="300px"/>
+			  <figcaption>Spheres</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="empty-l1-indirect.png" width="300px"/>
+			  <figcaption>Empty box</figcaption>
+			</div>
+		  </div>
+		  <p>Comparing Indirect roulette and Direct lighting: </p>
+		  <div style="display: flex; justify-content: center; gap: 40px; margin-bottom: 20px;">
+			<div style="text-align: center;">
+			  <img src="bunny-1l-indirect.png" width="300px"/>
+			  <figcaption>Indirect (global)</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="bunny-direct.png" width="300px"/>
+			  <figcaption>Direct</figcaption>
+			</div>
+		  </div>
+		  
 
 		<h2>Part 5: Adaptive Sampling</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
