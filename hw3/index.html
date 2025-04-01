@@ -143,7 +143,33 @@
 				
 				<li>throughout the entire internal node process, caught a few potential bad edge cases by defaulting the node back to the leaf node, namely if after splitting by best median centroid, one side is still empty (this would indicate that all objects had the same centroid on all axes).</li>
 				</p>
-			
+			<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-bottom: 20px;">
+				<div style="text-align: center;">
+					<img src="cow.png" width="200px"/>
+					<figcaption>cow.dae</figcaption>
+				</div>
+				<div style="text-align: center;">
+					<img src="bench.png" width="200px"/>
+					<figcaption>bench.dae</figcaption>
+				</div>
+				<div style="text-align: center;">
+					<img src="planck.png" width="200px"/>
+					<figcaption>planck.dae</figcaption>
+				</div>
+			</div>
+			<p>On average, each of these pictures took 0.0623 seconds to render with BVH. Specifically we have:</p>
+			<div>
+				<li>
+					planck (50801 primitives) - 0.0707s
+				</li>
+				<li>
+					cow (5856 primitives) - 0.0599s
+				</li>
+				<li>
+					bench (67808 primitives) - 0.0462s
+				</li>
+			</div>
+		
 			
 
 		<h2>Part 3: Direct Illumination</h2>
@@ -463,7 +489,6 @@
 			  </tr>
 			</table>
 		</div>
-	
 		</div>
 	</body>
 </html>
