@@ -134,9 +134,17 @@
 				We start out our algorithm with some given range of primitives (start to end) and checks whether the number of primitives is less than or equal to a user-specified max_leaf_size. If it happens to be so, we create a leaf node by storing that range of primitives and then return.
 			However, if the number of primitives exceeds max_leaf_size, the algorithm must decide how to split the primitives into two subsets, and this is where our splitting heuristic comes in.
 			</p>
+			<p><b>The Heuristic: Surface Area Heuristic Cost</b></p>
 			<p>
 				
-			</p>
+				<li>The heuristic used to determine which was the best is surface area heuristic cost (surface area of left box * num objects in left + surface area of right box * num objects in right)</li>
+				
+				<li>Created new std::vectors for left and right boxes. then made recursive call for both sides to continue BVH.</li>
+				
+				<li>throughout the entire internal node process, caught a few potential bad edge cases by defaulting the node back to the leaf node, namely if after splitting by best median centroid, one side is still empty (this would indicate that all objects had the same centroid on all axes).</li>
+				</p>
+			
+			
 
 		<h2>Part 3: Direct Illumination</h2>
 		<p>
@@ -270,24 +278,192 @@
 			  <figcaption>Direct</figcaption>
 			</div>
 		  </div>
+
+		<p>Here are some images rendered at 1024 samples per pixels with the max ray depth set at 0-5 with isAccumBounces set to false:</p>
+		<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-bottom: 20px;">
+			<div style="text-align: center;">
+			  <img src="./noaccum/0m-bunny.png" width="200px"/>
+			  <figcaption>m=0</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./noaccum/1m-bunny.png" width="200px"/>
+			  <figcaption>m=1</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./noaccum/2m-bunny.png" width="200px"/>
+			  <figcaption>m=2</figcaption>
+			</div>
+			<div style="text-align: center;">
+				<img src="./noaccum/3m-bunny.png" width="200px"/>
+				<figcaption>m=3</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./noaccum/4m-bunny.png" width="200px"/>
+				<figcaption>m=4</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./noaccum/5m-bunny.png" width="200px"/>
+				<figcaption>m=5</figcaption>
+			  </div>
+		  </div>
+		  <p>We can see here that when m=2 or m=3, we have much softer shadows compared to rasterization. Furthermore, there's a subtle difference between m=2 and m=3, we can see the lighting is 
+			  more evenly distributed when m=3, which is a general trend that happens as m increases. Also, we have more "color bleeding" as m increases, which is where the color of objects starts to bleed a little bit into the surfaces around them.
+		  </p>
+
+		  <p>And here are the same images rendered at 1024 samples per pixels with the max ray depth set at 0-5 with isAccumBounces set to true:</p>
+		  <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-bottom: 20px;">
+			  <div style="text-align: center;">
+				<img src="./accum/0m-acc-bunny.png" width="200px"/>
+				<figcaption>m=0</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./accum/1m-acc-bunny.png" width="200px"/>
+				<figcaption>m=1</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./accum/2m-acc-bunny.png" width="200px"/>
+				<figcaption>m=2</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				  <img src="./accum/3m-acc-bunny.png" width="200px"/>
+				  <figcaption>m=3</figcaption>
+				</div>
+				<div style="text-align: center;">
+				  <img src="./accum/4m-acc-bunny.png" width="200px"/>
+				  <figcaption>m=4</figcaption>
+				</div>
+				<div style="text-align: center;">
+				  <img src="./accum/5m-acc-bunny.png" width="200px"/>
+				  <figcaption>m=5</figcaption>
+				</div>
+			</div>
+		<p>As expected, setting isAccumBounces to true allows us to account for all the accumulated light up to max ray depth, resulting in far richer global illumination.</p>
+		<p>Here are the same images with isAccumBounces set to true using Russian Roulette of p = 0.3 and m=32</p>
+		<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-bottom: 20px;">
+			<div style="text-align: center;">
+			  <img src="./rr/0rr-bunny.png" width="200px"/>
+			  <figcaption>m=0</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./rr/1rr-bunny.png" width="200px"/>
+			  <figcaption>m=1</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./rr/2rr-bunny.png" width="200px"/>
+			  <figcaption>m=2</figcaption>
+			</div>
+			<div style="text-align: center;">
+				<img src="./rr/3rr-bunny.png" width="200px"/>
+				<figcaption>m=3</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./rr/4rr-bunny.png" width="200px"/>
+				<figcaption>m=4</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./rr/5rr-bunny.png" width="200px"/>
+				<figcaption>m=5</figcaption>
+			  </div>
+		  </div>
+		<p>Finally, here's some pictures of the spheres with different pixel sample rates 1-1024, scaling by 2:</p>
+		<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; margin-bottom: 20px;">
+			<div style="text-align: center;">
+			  <img src="./spheres/1ss-sphere.png" width="200px"/>
+			  <figcaption>s=1</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./spheres/2ss-sphere.png" width="200px"/>
+			  <figcaption>s=2</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./spheres/4ss-sphere.png" width="200px"/>
+			  <figcaption>s=4</figcaption>
+			</div>
+			<div style="text-align: center;">
+				<img src="./spheres/8ss-sphere.png" width="200px"/>
+				<figcaption>s=8</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./spheres/16ss-sphere.png" width="200px"/>
+				<figcaption>s=16</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./spheres/32ss-spheres.png" width="200px"/>
+				<figcaption>s=32</figcaption>
+			  </div>
+
+			  <div style="text-align: center;">
+				<img src="./spheres/64ss-sphere.png" width="200px"/>
+				<figcaption>s=64</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./spheres/128s-sphere.png" width="200px"/>
+				<figcaption>s=128</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./spheres/256ss-sphere.png" width="200px"/>
+				<figcaption>s=256</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				  <img src="./spheres/1024ss-sphere.png" width="200px"/>
+				  <figcaption>s=1024</figcaption>
+				</div>
+		  </div>
+		
 		  
 
 		<h2>Part 5: Adaptive Sampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-		<h2>(Optional) Part 6: Extra Credit Opportunities</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-		
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
+		<p>In the Monte Carlo path tracer, we normally sample each pixel a fixed number of times provided by the -s flag. The problem is not every part of an image is equally complex - some pixels converge to a stable color with fewer samples
+			while others need many more. We try to solve this by dynamically deciding how many samples each pixel needs:
+		</p>
+		<div>
+			<li>
+				We take a few samples of each pixel
 			</li>
-		</ul>
+			<li>
+				We then try to estimate how noisy this pixel currently is
+			</li>
+			<li>
+				Once we've some threshold of "good enough", we can stop sampling
+			</li>
+			<li>
+				Otherwise, keep sampling.
+			</li>
+		</div>
+
+		<p>The idea of convergence is basically using a statistical test to see if the illuminance (brightness of a color) is "converged" or not. After each sample we
+			compute illuminance and the sum of them / the sum of their squares -> this gives us the mean and variance which we use a statistical test to see if we converged or not.
+		</p>
+		<p>The way we implemented this was pretty 1-1 with the algorithm description - for each sample, we check the color sample given by the path tracer, and get its illuminance. We then update s1 and s2, our counters, and 
+			increment our counter n. Every batch of samples (roughly 32) we will compute I, and if we've converged, we can stop taking samples for the pixel. If not, keep taking samples.
+		</p>
+		<p>Once we've converged, we compute the final averaged color of our pixel as the accumulated color / n, where n is how many samples we used. N also helps us generate our heatmap</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="sphere.png" width="300px"/>
+				  <figcaption>Sphere</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny.png" width="300px"/>
+				  <figcaption>Bunny</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="sphere_rate.png" width="300px"/>
+				  <figcaption>Sphere Sample Rate Heat Map</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="bunny_rate.png" width="300px"/>
+				  <figcaption>Bunny Sample Rate Heat Map</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+	
 		</div>
 	</body>
 </html>
