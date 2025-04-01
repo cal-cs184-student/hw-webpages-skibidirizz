@@ -157,18 +157,19 @@
 					<figcaption>planck.dae</figcaption>
 				</div>
 			</div>
-			<p>On average, each of these pictures took 0.0623 seconds to render with BVH. Specifically we have:</p>
+			<p>We can take a look at the before and afters with and without BVH:</p>
 			<div>
 				<li>
-					planck (50801 primitives) - 0.0707s
+					planck (50801 primitives) - 149s -> 0.0707s
 				</li>
 				<li>
-					cow (5856 primitives) - 0.0599s
+					cow (5856 primitives): 12.7s -> 0.0599s
 				</li>
 				<li>
-					bench (67808 primitives) - 0.0462s
+					bench (67808 primitives): 180s -> 0.0462s
 				</li>
 			</div>
+			<p>As expected, we see an enormous speedup when using BVH acceleration. Going from O(N) runtime to O(logN) runtime is definitely noticeable, you can see it sped up our rendering by many orders of magnitude. Interestingly enough, the cow rendered quicker than the bench using accelerated BVH, probably due to some sort of overhead, despite cow being 1 order of magnitude smaller. Overall, using the slab method and centroid method as a heuristic really helped speed our naive BVH up much faster!</p>
 		
 			
 
