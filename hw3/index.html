@@ -244,6 +244,33 @@
 			  </tr>
 			</table>
 		</div>
+		<p>And here's some spheres rendered at 1, 4, 16, 64 light rays respectively:</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="4l-spherebro.png" width="300px"/>
+				  <figcaption>l=1</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="16l-spherebro.png" width="300px"/>
+				  <figcaption>l=4</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="1l-spherebro.png" width="300px"/>
+				  <figcaption>l=16</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="64l-spherebro.png" width="300px"/>
+				  <figcaption>l=64</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
 		<p>It's a little difficult to see at first, but looking at areas with higher shadows, you can tell that Importance Lighting causes more contrast, giving darker shadows and whiter whites. 
 			By contrast, Uniform Hemisphere Lighting gives more equal, softer shadows across the rabbit. We can tell this is most likely due to the fact that Uniform Hemisphere Lighting does exactly what the name suggests - namely
 			it uses the Monte Carlo algorithm to uniformly and randomly sample directions, hence the more equal distribution of light. By contrast, our Importance Lighting algorithm
