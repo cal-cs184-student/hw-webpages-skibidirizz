@@ -102,7 +102,7 @@
 			</div>
 			
 		</div>
-		<p>As k increases, we can see the cloth look more and more just the flat cloth grid unaffected by external forces in Part 1. This is because when k increases the force of the springs starts to outweigh the forces from the external forces on each point mass, causing the cloth to look more and more uniform.</p>
+		<p>As k increases, we can see the cloth look more and more just the flat cloth grid unaffected by external forces in Part 1. This is because when k increases the force of the springs starts to outweigh the forces from the external forces on each point mass, causing the cloth to look more and more uniform. This is much different than the default parameters since the cloth becomes much stiffer at k=1000.</p>
 		<br/>
 		<p>Here, we changed values of d = [1, 10, 100, 1000] while keeping k = 5000 constant.</p>
 		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
@@ -123,7 +123,7 @@
 				<figcaption>d=1000</figcaption>
 			  </div>
 		</div>
-		<p>As density increases, we can see the cloth start to sag more and more. This is due to the point masses weighing a lot more now - and when density = 1000, you can see a triangle start to form as the cloth starts to really weigh down on the 2 pinned point masses.</p>
+		<p>As density increases, we can see the cloth start to sag more and more. This is due to the point masses weighing a lot more now - and when density = 1000, you can see a triangle start to form as the cloth starts to really weigh down on the 2 pinned point masses. This is much different from the default parameters as the cloth sags a lot when density=1000</p>
 		<br/>
 		<p>Here, we set k = 5000 and d = 15, while changing damping between [0, 1.00%]. To see the effects of damping, we no longer wait till the cloth achieves "equilibrium", and instead take a picture after 2 seconds of the simulation have passed.</p>
 		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
@@ -148,8 +148,13 @@
 				<figcaption>d=1.00%</figcaption>
 			  </div>
 		</div>
-		<p>It is a little difficult to tell here, but increasing dampening makes the cloth fall at a quicker speed, and it falls at a uniform pace as well. This makes sense - when dampening = 0, we have no energy lost to friction or heat, so we don't expect any of the force to decrease as the cloth falls. When dampening increases, the cloth loses more and more energy to heat and friction, thus our cloth falls a lot more slowly and it decelerates much faster too.</p>
-
+		<p>It is a little difficult to tell here, but increasing dampening makes the cloth fall at a quicker speed, and it falls at a uniform pace as well. This makes sense - when dampening = 0, we have no energy lost to friction or heat, so we don't expect any of the force to decrease as the cloth falls. When dampening increases, the cloth loses more and more energy to heat and friction, thus our cloth falls a lot more slowly and it decelerates much faster too. This is much different from the default parameters since the cloth falls a lot slower when damp=1.00%</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-final-state.png" width="400px" />
+			  <figcaption>4 pinned points - final resting state.</figcaption>
+			</div>
+		</div>
 		<h2>Part 3: Handling collisions with other objects</h2>
 		<p>We pretty much followed the task description verbatim to accomplish plane and sphere collision. For spheres, we first checked if our new point mass position was in the sphere or not. This was simple, since all we needed to do was check if its position’s distance from the sphere’s origin was smaller than the sphere’s radius or not. If it was not in the sphere, the point did not collide, and we returned from the function early.
 			To adjust its position of a colliding point mass, we first calculated the tangent point of the line from origin to position with the sphere’s surface with the following equation:
