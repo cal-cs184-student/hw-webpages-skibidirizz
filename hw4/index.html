@@ -197,7 +197,72 @@
 		
 
 		<h2>Part 4: Handling self-collisions</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+			Our implementation follows the task description very closely.
+		</p>
+		<p>
+			For hash_position(), We use the given equations of w, h, and t to define our 3D boxes. However, instead of using fmod to find which box a point mass belongs in, we simply divide its x, y, z coordinates by w, h, t respectively and floor the result. Then, with these 3D box indices (wi, hi, and ti) we use the classic nested array index to 1D array index translation to get a unique box ID:
+		</p>
+		<p>
+			int unique_ID = wi + hi * width + ti * width * height
+		</p>
+		<p>
+			The final hash / unique box ID is this integer casted to a float.
+		</p>
+		<p>
+			For build_spatial_map(), the implementation follows the task description to a tee, just also making sure to instantiate a hash key if it does not already exist in the map, with a new vector of point masses allocated in the heap, not the function’s stack.
+		</p>
+		<p>
+			For self_collide(), the algorithm again follows the task description very directly. Candidates are other point massesdist) / dist box as the given point mass, retrieved from our map. To get the final correction_vector, we initialize it to the zero vector in 3D, and a count of collided point masses to 0 before we iterate through all candidates. On each iteration, we first check and continue to the next iteration if the candidate is the given point mass itself by address. If we detect a collision with the given threshold (2 * thickness), the correction vector is determined by the following equation:
+		</p>
+		<p>
+			correction_vector = (threshold - dist) / dist * (position - candidate_position)
+		</p>
+		<p>
+			This essentially takes the vector from the candidate to the position, and multiplies it by the ratio of the difference between the threshold distance and the actual distance over the actual distance. This essentially is the vector that our point mass needs to be shifted by, in order to be a valid distance away from the candidate point mass.
+		</p>	
+		<p>
+			After the iteration, we divide the sum of all collided correction vectors over the number of collisions to take their average, as intended. Then, we divide again by simulation_steps, for the reason stated in the task description. This final, averaged and scaled collision vector is added to our point mass’s position.
+		</p>
+		<p>
+			Bringing these 3 functions all together, in simulate() for one time step, we first populate our mapping of boxes to point masses contained in the box by calling build_spatial_map(), which calls hash_position() on each point mass. Then, back in simulate(), we iterate through all point masses in the cloth, and call self_collide() on each, using this map to compute collisions with the cloth itself and adjust each point mass accordingly.
+		</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="4-1.png" width="400px" />
+			  <figcaption>Early stage Self-Collision</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="4-4.png" width="400px" />
+			  <figcaption>Mid stage Self-Collision</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="4-7.png" width="400px" />
+			  <figcaption>Late stage Self-Collision</figcaption>
+			</div>
+		</div>
+		<p>As density increases, the amount of folds on the cloth increases. When the cloth is heavier, you expect the force of gravity to outweigh the stiffness of the cloth stored by its spring forces, which is why there are so many folds. At a lower density, the spring forces hold up more against gravity, causing less folds to occur.</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-4-d=1.png" width="400px" />
+			  <figcaption>density=1</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-4-d=1000.png" width="400px" />
+			  <figcaption>density=1000</figcaption>
+			</div>
+		</div>
+		<p>As ks increases, the amount of folds on the cloth decreases. This makes sense - as outlined earlier, higher k values make the cloth more stiff and resistant to folding from the forces of gravity, so less folds as ks increases makes sense.</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-4-k=5.png" width="400px" />
+			  <figcaption>k=5</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-4-k=50000.png" width="400px" />
+			  <figcaption>ks=50000</figcaption>
+			</div>
+		</div>
 
 		<h2>Part 5: Shaders</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
