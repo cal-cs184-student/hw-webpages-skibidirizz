@@ -145,7 +145,7 @@
 			  </div>
 			  <div style="text-align: center;">
 				<img src="./pt2/clothsim-2-damp=100.png" width="400px" />
-				<figcaption>d=1.00%</figcaption>
+				<figcaption>damp=1.00%</figcaption>
 			  </div>
 		</div>
 		<p>It is a little difficult to tell here, but increasing dampening makes the cloth fall at a quicker speed, and it falls at a uniform pace as well. This makes sense - when dampening = 0, we have no energy lost to friction or heat, so we don't expect any of the force to decrease as the cloth falls. When dampening increases, the cloth loses more and more energy to heat and friction, thus our cloth falls a lot more slowly and it decelerates much faster too. This is much different from the default parameters since the cloth falls a lot slower when damp=1.00%</p>
@@ -156,20 +156,41 @@
 			</div>
 		</div>
 		<h2>Part 3: Handling collisions with other objects</h2>
-		<p>We pretty much followed the task description verbatim to accomplish plane and sphere collision. For spheres, we first checked if our new point mass position was in the sphere or not. This was simple, since all we needed to do was check if its position’s distance from the sphere’s origin was smaller than the sphere’s radius or not. If it was not in the sphere, the point did not collide, and we returned from the function early.
-			To adjust its position of a colliding point mass, we first calculated the tangent point of the line from origin to position with the sphere’s surface with the following equation:
+		<p>
+			For sphere and plane collision, our algorithms followed these general steps, for a given point mass and object:
+		</p>
+		<ol>
+			<li>Determine whether the point mass intersects with the object. Return if it does not.</li>
+			<li>Find the tangent point on the surface of the object, with the given point mass's position.</li>
+			<li>Compute the correction vector from the point mass's old position to this tangent point: \[correction\_vector = tangent\_point - last\_position\] We need to compute this correction vector explicitly because the tangent point is not (necessarily) on the line from the point mass’s old position to its current/new position. </li>
+			<li>Set the point mass's new position to the following equation, where friction is a property of the object:
+				\[position = last\_position + correction\_vector * (1 - friction)\]
+				The <code>(1-friction)</code> factor essentially scales down the correction vector to find a middle point between the old position and the tangent point– a reasonable location for the new position to be.
+			</li>
+		</ol>
+		<p>
+			The last two steps are the same for both sphere and plane collision, but the first two look differ in their implementation.
 		</p>
 		<p>
-			tangent_point = origin + (radius * (position - origin).unit())
+			For sphere collision, checking if our point mass collided with the sphere was simple.
+			All we needed to do was check if its position’s distance from the sphere’s origin was smaller than the sphere’s radius or not.
+			If it were smaller, than meant we collided.
 		</p>
 		<p>
-			This tangent_point is not (necessarily) on the line from the point mass’s old position to the current/new position. As such, we explicitly calculate the vector from the old position to the tangent point, and scale down this vector by (1-friction) to find a point somewhere between the old position and the collision point, where the new position can go. This is the final position that we set for the our point mass.
+			The tangent point was defined as the point where the line from origin to point mass's position intersected the sphere's surface.
+			This point can be computed with the following equation: \[tangent\_point = origin + (radius * (position - origin).unit())\]
 		</p>
 		<p>
-			As for plane collision, the general steps are the same, but with different algorithms to achieve them. First, to check if the point mass intersects the plane, we use dot product. We take the vector between the point on the plane and each of the point mass’s old and new positions. With each of these vectors, we compute its dot product with the plane’s normal vector. The sign of these dot products tells us which side of the plane the old and new positions are on. If they are on opposite sides (so they have opposite signs), that means that the point mass intersects the plane, and we need to find the point of collision.
+			For plane collision, we used dot product to check if the point mass intersected the plane.
+			We first defined two vectors: one between the plane point and the point mass's old position, and the other between the plane point and the point mass's new position.
+			With each of these vectors, we computed its dot product with the plane’s normal vector.
+			The sign of these dot products tells us which side of the plane the old and new positions are on.
+			As such, if the dot products had opposite signs, the point mass intersected the plane.
 		</p>
 		<p>
-			To compute the tangent point / point of collision, we use the ray-plane intersection method from class, with the ray’s position, and an arbitrary point on the plane. However, we also offset this tangent point by a SURFACE_OFFSET in the direction of the normal vector, in order to make sure that the new position of the point mass is on the top side of the plane, not the bottom side. Using this off-setted tangent point, we follow the algorithm the same way we did with a sphere, to compute the point mass’s final, non-collided position.
+			To compute the tangent point / point of collision, we use the ray-plane intersection algorithm from class, with the ray being represented by the vector from the point mass's old position to plane point.
+			This gives us a point directly on the plane.
+			Since we want a point that is slightly above the plane, we also offset this tangent point by a <code>SURFACE_OFFSET</code> in the direction of the normal vector.
 		</p>
 		<p>
 			Throughout both collision algorithms, we take care to make sure vector directions align and give us our intended result.
@@ -189,10 +210,13 @@
 			</div>
 		</div>
 		<p>
-			The main difference here is that as ks increases, the "stiffness" of the cloth increases. At k = 500, we can see the cloth draped on the sphere has lots of surface area where the cloth is directly contacting the sphere - this is because the force of gravity is stronger than the internal forces of the springs. As k increases, we can see in the picture where k = 50000 that much less of the cloth is actually contacting the sphere. This is because the high force incurred by the springs is making the cloth more stiff, and thus it doesn't drape over the sphere as much.
+			The main difference here is that as ks increases, the "stiffness" of the cloth increases.
+			At <code>k = 500</code>, we can see the cloth draped on the sphere has lots of surface area where the cloth is directly contacting the sphere.
+			This is because the force of gravity is stronger than the internal forces of the springs.
+			As <code>k</code> increases, we can see in the picture where <code>k = 50000</code> that much less of the cloth is actually contacting the sphere.
+			This is because the high force incurred by the springs is making the cloth more stiff, and thus it doesn't drape over the sphere as much.
 		</p>
-		<br/>
-		<p>And cloth collision with a plane:</p>
+		<p>Here, we see how our cloth collides with a plane:</p>
 		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
 			<div style="text-align: center;">
 			  <img src="plane-collide-color.png" width="400px" />
@@ -206,31 +230,38 @@
 			Our implementation follows the task description very closely.
 		</p>
 		<p>
-			For hash_position(), We use the given equations of w, h, and t to define our 3D boxes. However, instead of using fmod to find which box a point mass belongs in, we simply divide its x, y, z coordinates by w, h, t respectively and floor the result. Then, with these 3D box indices (wi, hi, and ti) we use the classic nested array index to 1D array index translation to get a unique box ID:
-		</p>
-		<p>
-			int unique_ID = wi + hi * width + ti * width * height
+			For <code>hash_position()</code>, We use the given equations of <code>w</code>, <code>h</code>, and <code>t</code> to define our 3D boxes.
+			Then, instead of using <code>fmod</code> to find which box a point mass belongs in, we simply divide its positions's 
+			<code>x</code>, <code>y</code>, and <code>z</code> coordinates by <code>w</code>, <code>h</code>, and <code>t</code> respectively and floor the results, to get our 3D box's indices: <code>wi</code>, <code>hi</code>, and <code>ti</code>.
+			Then, with these indices, we use the classic nested array index to 1D array index translation to get a unique box ID: \[hash = wi + hi * width + ti * width * height\] 
 		</p>
 		<p>
 			The final hash / unique box ID is this integer casted to a float.
 		</p>
 		<p>
-			For build_spatial_map(), the implementation follows the task description to a tee, just also making sure to instantiate a hash key if it does not already exist in the map, with a new vector of point masses allocated in the heap, not the function’s stack.
+			For <code>build_spatial_map()</code>, we first clear the cloth's <code>map</code> to get rid of the last time step's data.
+			Then, we iterate through all the cloth's point masses, compute its hash by calling <code>hash_position()</code> on it, and add it to the <code>map</code>, taking care to create a new key-value pair in the <code>map</code> if its hash did not already exist.
+			We also make sure to allocate the list of point masses with that hash (the value in the key-value pair) in the heap, so that other functions will have access to it.
 		</p>
 		<p>
-			For self_collide(), the algorithm again follows the task description very directly. Candidates are other point massesdist) / dist box as the given point mass, retrieved from our map. To get the final correction_vector, we initialize it to the zero vector in 3D, and a count of collided point masses to 0 before we iterate through all candidates. On each iteration, we first check and continue to the next iteration if the candidate is the given point mass itself by address. If we detect a collision with the given threshold (2 * thickness), the correction vector is determined by the following equation:
+			For <code>self_collide()</code>, we iterate through all candidate point masses to determine if the given point mass collides with it.
+			These candidates are all other point masses in the same box as the given point mass, retrieved from our <code>map</code>.
+			Before iterating through candidates, we initialize a <code>correction_vector</code> to the zero vector in 3D, and a count of collided point masses to 0.
+			On each iteration, we first check if the candidate is the given point mass itself by address, continue to the next iteration if they share the same address.
+			Then, we check if the distance between point mass and candidate is below the given threshold <code>(2 * thickness)</code>.
+			If so, then we say the points collided, and compute this individual correction vector with the following equation:
+			\[correction\_vector = \frac{threshold - ||v||}{||v||} * v \:\: \text{where} \:\: v =  position - candidate\_position \] 
+			This essentially is the vector that our point mass needs to be shifted by, in order to be a valid distance away from the candidate point mass.
+			This correction vector is then added to our accumulated correction vector that we initialized prior to iteration.
 		</p>
 		<p>
-			correction_vector = (threshold - dist) / dist * (position - candidate_position)
+			After the iteration, we divide the accumulated correction vector by the number of collisions to get the average, as intended. Then, we divide it again by <code>simulation_steps</code>. This final, averaged and scaled collision vector is added to our point mass’s position to get its final, non-self-collided position.
 		</p>
 		<p>
-			This essentially takes the vector from the candidate to the position, and multiplies it by the ratio of the difference between the threshold distance and the actual distance over the actual distance. This essentially is the vector that our point mass needs to be shifted by, in order to be a valid distance away from the candidate point mass.
-		</p>	
-		<p>
-			After the iteration, we divide the sum of all collided correction vectors over the number of collisions to take their average, as intended. Then, we divide again by simulation_steps, for the reason stated in the task description. This final, averaged and scaled collision vector is added to our point mass’s position.
-		</p>
-		<p>
-			Bringing these 3 functions all together, in simulate() for one time step, we first populate our mapping of boxes to point masses contained in the box by calling build_spatial_map(), which calls hash_position() on each point mass. Then, back in simulate(), we iterate through all point masses in the cloth, and call self_collide() on each, using this map to compute collisions with the cloth itself and adjust each point mass accordingly.
+			We bringing these 3 functions together in <code>simulate()</code>.
+			We first populate our box-to-point-masses mapping by calling <code>build_spatial_map()</code>, which calls <code>hash_position()</code> internally.
+			Then, we iterate through all point masses in the cloth, and call <code>self_collide()</code> on each,
+			using this map to compute collisions with the cloth itself and adjust each point mass's position accordingly.
 		</p>
 		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
 			<div style="text-align: center;">
