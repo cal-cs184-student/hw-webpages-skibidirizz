@@ -85,7 +85,73 @@
 
 		  
 		<h2>Part 2: Simulation via numerical integration</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>We took some screenshots of the simulation after it had reached "equilibrium", or when the cloth stopped moving much.</p>
+		<p>Here, we changed the values of k = [1, 10, 100, 1000] with density = 15 as a constant.</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-k=1.png" width="400px" />
+			  <figcaption>k=1</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-k=10.png" width="400px" />
+			  <figcaption>k=10</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-k=100.png" width="400px" />
+			  <figcaption>k=100</figcaption>
+			</div>
+			<div style="text-align: center;">
+				<img src="./pt2/clothsim-2-k=1000.png" width="400px" />
+				<figcaption>k=1000</figcaption>
+			  </div>
+		</div>
+		<p>As k increases, we can see the fabric "sticking" to itself - because the springs have a higher coefficient, they're more "stiff" and tend to bunch the cloth together. This becomes so extreme at k=1000 that the cloth just folds up into itself and doesn't really seem to be affected by external forces like gravity.</p>
+		<br/>
+		<p>Here, we changed values of d = [1, 10, 100, 1000] while keeping k = 10 constant.</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-d=1.png" width="400px" />
+			  <figcaption>d=1</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-d=10.png" width="400px" />
+			  <figcaption>d=10</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-d=100.png" width="400px" />
+			  <figcaption>d=100</figcaption>
+			</div>
+			<div style="text-align: center;">
+				<img src="./pt2/clothsim-2-d=1000.png" width="400px" />
+				<figcaption>d=1000</figcaption>
+			  </div>
+		</div>
+		<p>As density increases, the mass of the point masses increases, and we can see that the forces between the springs isn't as prominent as that of gravity, since our masses are so much heavier now. Even with a decently high K, when we increase the density by orders of magnitude, the cloth doesn't really "stick" to itself and ends up just falling due to the weight. You can see when d=1, the cloth kind of "curls up" due to the forces of the springs, but when d=1000, the force of gravity far outweighs any spring forces, so we don't have any curling.</p>
+		<br/>
+		<p>Here, we set k = 10 and d = 10, while changing damping between [0, 1.00%]. To see the effects of damping, we no longer wait till the cloth achieves "equilibrium", and instead take a picture after 2 seconds of the simulation have passed.</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-damp=0.png" width="400px" />
+			  <figcaption>damp=0%</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-damp=25.png" width="400px" />
+			  <figcaption>damp=0.25%</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="./pt2/clothsim-2-damp=50.png" width="400px" />
+			  <figcaption>damp=0.50%</figcaption>
+			</div>
+			<div style="text-align: center;">
+				<img src="./pt2/clothsim-2-damp=75.png" width="400px" />
+				<figcaption>damp=0.75%</figcaption>
+			  </div>
+			  <div style="text-align: center;">
+				<img src="./pt2/clothsim-2-damp=100.png" width="400px" />
+				<figcaption>d=1.00%</figcaption>
+			  </div>
+		</div>
+		<p>It is a little difficult to tell here, but increasing dampening makes the cloth fall at a quicker speed, and it falls at a uniform pace as well. This makes sense - when dampening = 0, we have no energy lost to friction or heat, so we don't expect any of the force to decrease as the cloth falls. When dampening increases, the cloth loses more and more energy to heat and friction, thus our cloth falls a lot more slowly and it decelerates much faster too.</p>
 
 		<h2>Part 3: Handling collisions with other objects</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
