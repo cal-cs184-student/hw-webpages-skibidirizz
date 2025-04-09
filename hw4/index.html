@@ -86,28 +86,25 @@
 		  
 		<h2>Part 2: Simulation via numerical integration</h2>
 		<p>We took some screenshots of the simulation after it had reached "equilibrium", or when the cloth stopped moving much.</p>
-		<p>Here, we changed the values of k = [1, 10, 100, 1000] with density = 15 as a constant.</p>
+		<p>Here, we changed the values of k = [500, 5000, 50000] with density = 15 as a constant.</p>
 		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
 			<div style="text-align: center;">
-			  <img src="./pt2/clothsim-2-k=1.png" width="400px" />
-			  <figcaption>k=1</figcaption>
+			  <img src="./pt2/clothsim-2-k=500.png" width="400px" />
+			  <figcaption>k=500</figcaption>
 			</div>
 			<div style="text-align: center;">
-			  <img src="./pt2/clothsim-2-k=10.png" width="400px" />
-			  <figcaption>k=10</figcaption>
+			  <img src="./pt2/clothsim-2-k=5000.png" width="400px" />
+			  <figcaption>k=5000</figcaption>
 			</div>
 			<div style="text-align: center;">
-			  <img src="./pt2/clothsim-2-k=100.png" width="400px" />
-			  <figcaption>k=100</figcaption>
+			  <img src="./pt2/clothsim-2-k=50000.png" width="400px" />
+			  <figcaption>k=50000</figcaption>
 			</div>
-			<div style="text-align: center;">
-				<img src="./pt2/clothsim-2-k=1000.png" width="400px" />
-				<figcaption>k=1000</figcaption>
-			  </div>
+			
 		</div>
-		<p>As k increases, we can see the fabric "sticking" to itself - because the springs have a higher coefficient, they're more "stiff" and tend to bunch the cloth together. This becomes so extreme at k=1000 that the cloth just folds up into itself and doesn't really seem to be affected by external forces like gravity.</p>
+		<p>As k increases, we can see the cloth look more and more just the flat cloth grid unaffected by external forces in Part 1. This is because when k increases the force of the springs starts to outweigh the forces from the external forces on each point mass, causing the cloth to look more and more uniform.</p>
 		<br/>
-		<p>Here, we changed values of d = [1, 10, 100, 1000] while keeping k = 10 constant.</p>
+		<p>Here, we changed values of d = [1, 10, 100, 1000] while keeping k = 5000 constant.</p>
 		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
 			<div style="text-align: center;">
 			  <img src="./pt2/clothsim-2-d=1.png" width="400px" />
@@ -126,9 +123,9 @@
 				<figcaption>d=1000</figcaption>
 			  </div>
 		</div>
-		<p>As density increases, the mass of the point masses increases, and we can see that the forces between the springs isn't as prominent as that of gravity, since our masses are so much heavier now. Even with a decently high K, when we increase the density by orders of magnitude, the cloth doesn't really "stick" to itself and ends up just falling due to the weight. You can see when d=1, the cloth kind of "curls up" due to the forces of the springs, but when d=1000, the force of gravity far outweighs any spring forces, so we don't have any curling.</p>
+		<p>As density increases, we can see the cloth start to sag more and more. This is due to the point masses weighing a lot more now - and when density = 1000, you can see a triangle start to form as the cloth starts to really weigh down on the 2 pinned point masses.</p>
 		<br/>
-		<p>Here, we set k = 10 and d = 10, while changing damping between [0, 1.00%]. To see the effects of damping, we no longer wait till the cloth achieves "equilibrium", and instead take a picture after 2 seconds of the simulation have passed.</p>
+		<p>Here, we set k = 5000 and d = 15, while changing damping between [0, 1.00%]. To see the effects of damping, we no longer wait till the cloth achieves "equilibrium", and instead take a picture after 2 seconds of the simulation have passed.</p>
 		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
 			<div style="text-align: center;">
 			  <img src="./pt2/clothsim-2-damp=0.png" width="400px" />
@@ -143,7 +140,7 @@
 			  <figcaption>damp=0.50%</figcaption>
 			</div>
 			<div style="text-align: center;">
-				<img src="./pt2/clothsim-2-damp=75.png" width="400px" />
+				<img src="./pt2/clothsim-2-dampp=75.png" width="400px" />
 				<figcaption>damp=0.75%</figcaption>
 			  </div>
 			  <div style="text-align: center;">
@@ -154,7 +151,50 @@
 		<p>It is a little difficult to tell here, but increasing dampening makes the cloth fall at a quicker speed, and it falls at a uniform pace as well. This makes sense - when dampening = 0, we have no energy lost to friction or heat, so we don't expect any of the force to decrease as the cloth falls. When dampening increases, the cloth loses more and more energy to heat and friction, thus our cloth falls a lot more slowly and it decelerates much faster too.</p>
 
 		<h2>Part 3: Handling collisions with other objects</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>We pretty much followed the task description verbatim to accomplish plane and sphere collision. For spheres, we first checked if our new point mass position was in the sphere or not. This was simple, since all we needed to do was check if its position’s distance from the sphere’s origin was smaller than the sphere’s radius or not. If it was not in the sphere, the point did not collide, and we returned from the function early.
+			To adjust its position of a colliding point mass, we first calculated the tangent point of the line from origin to position with the sphere’s surface with the following equation:
+		</p>
+		<p>
+			tangent_point = origin + (radius * (position - origin).unit())
+		</p>
+		<p>
+			This tangent_point is not (necessarily) on the line from the point mass’s old position to the current/new position. As such, we explicitly calculate the vector from the old position to the tangent point, and scale down this vector by (1-friction) to find a point somewhere between the old position and the collision point, where the new position can go. This is the final position that we set for the our point mass.
+		</p>
+		<p>
+			As for plane collision, the general steps are the same, but with different algorithms to achieve them. First, to check if the point mass intersects the plane, we use dot product. We take the vector between the point on the plane and each of the point mass’s old and new positions. With each of these vectors, we compute its dot product with the plane’s normal vector. The sign of these dot products tells us which side of the plane the old and new positions are on. If they are on opposite sides (so they have opposite signs), that means that the point mass intersects the plane, and we need to find the point of collision.
+		</p>
+		<p>
+			To compute the tangent point / point of collision, we use the ray-plane intersection method from class, with the ray’s position, and an arbitrary point on the plane. However, we also offset this tangent point by a SURFACE_OFFSET in the direction of the normal vector, in order to make sure that the new position of the point mass is on the top side of the plane, not the bottom side. Using this off-setted tangent point, we follow the algorithm the same way we did with a sphere, to compute the point mass’s final, non-collided position.
+		</p>
+		<p>
+			Throughout both collision algorithms, we take care to make sure vector directions align and give us our intended result.
+		</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="sphere-500.png" width="400px" />
+			  <figcaption>k=500</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="sphere-5000.png" width="400px" />
+			  <figcaption>k=5000</figcaption>
+			</div>
+			<div style="text-align: center;">
+			  <img src="sphere-50000.png" width="400px" />
+			  <figcaption>k=50000</figcaption>
+			</div>
+		</div>
+		<p>
+			The main difference here is that as ks increases, the "stiffness" of the cloth increases. At k = 500, we can see the cloth draped on the sphere has lots of surface area where the cloth is directly contacting the sphere - this is because the force of gravity is stronger than the internal forces of the springs. As k increases, we can see in the picture where k = 50000 that much less of the cloth is actually contacting the sphere. This is because the high force incurred by the springs is making the cloth more stiff, and thus it doesn't drape over the sphere as much.
+		</p>
+		<br/>
+		<p>And cloth collision with a plane:</p>
+		<div style="display: flex; justify-content: space-evenly; align-items: center; flex-wrap: wrap; gap: 20px; padding: 20px;">
+			<div style="text-align: center;">
+			  <img src="plane-collide-color.png" width="400px" />
+			  <figcaption>Plane collision with a cloth</figcaption>
+			</div>
+		</div>
+		
 
 		<h2>Part 4: Handling self-collisions</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
